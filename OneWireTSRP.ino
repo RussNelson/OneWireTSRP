@@ -38,7 +38,6 @@ unsigned int port = 22601;
 void setup() {
   Serial.begin(9600);
   Serial.println("Starting...");
-  while(!Serial) { }
 
   Serial.println("Waiting for DHCP address.");
   if (Ethernet.begin(mac) == 0) {
@@ -154,9 +153,9 @@ void loop() {
     strcpy(packetBuffer,(char*)pgm_read_word(&loopPacket1) );
     strcat(packetBuffer, itoa( requestID, buffer, 10) );
     strcat(packetBuffer,(char*)pgm_read_word(&loopPacket2) );
-    if (addr[7] == 0x10) strcat(packetBuffer, "ds1820");
-    else if (addr[7] == 0x28) strcat(packetBuffer, "ds18b20");
-    else if (addr[7] == 0x22) strcat(packetBuffer, "ds1822");
+    if (addr[0] == 0x10) strcat(packetBuffer, "ds1820");
+    else if (addr[0] == 0x28) strcat(packetBuffer, "ds18b20");
+    else if (addr[0] == 0x22) strcat(packetBuffer, "ds1822");
     else strcat(packetBuffer, "ds????");
     strcat(packetBuffer,(char*)pgm_read_word(&loopPacket3) );
     for (byte thisByte = 0; thisByte < 7; thisByte++) {
@@ -169,7 +168,8 @@ void loop() {
       strcat(packetBuffer, buffer); 
     }
     strcat(packetBuffer,(char*)pgm_read_word(&loopPacket5) );
-    sprintf(packetBuffer + strlen(packetBuffer), "%4.2f", celsius);
+    strcat(packetBuffer, dtostrf(celsius,4,2,buffer));
+    //sprintf(packetBuffer + strlen(packetBuffer), "%4.2f", celsius);
     strcat(packetBuffer,(char*)pgm_read_word(&loopPacket6) );
 
 
