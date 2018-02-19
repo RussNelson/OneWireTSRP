@@ -1,1 +1,1 @@
-This is my *default* document.
+This is my *default* _document_.
